@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="stylesheet" href="static/css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    />
+    <title>YandexLyceumStudentsChat</title>
+  </head>
+  <body>
+    <header class="header">
+      <div class="content_block">
+        <div class="header_inner">
+          <div class="header_logo">
+            <h1>YL Student's Chat</h1>
+          </div>
+          {% if current_user.is_authenticated %}
+          <nav class="nav">
+            <a class="nav_link" href="/api/logout">{{ current_user.nickname }}</a>
+            <img class="nav_link" width="50px" height="50px" src="static/img/ava.png" class="avatar" alt=""/>
+          </nav>
+          {% else %}
+          <p>
+            <a class="btn btn-primary" href="/api/register">Зарегистрироваться</a>
+            <a class="btn btn-success" href="/api/login">Войти</a>
+          </p>
+          {% endif %}
+        </div>
+      </div>
+    </header>
+    <main role="main" class="container">{% block content %}{% endblock %}</main>
+  </body>
+</html>
