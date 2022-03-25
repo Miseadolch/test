@@ -65,15 +65,6 @@ def reg_users():
 
 @blueprint.route('/api/login', methods=['GET', 'POST'])
 def login():
-    db_sess = db_session.create_session()
-    f = request.files['file']
-    f.save('static/photos/download.png')
-    return redirect("/api/login")
-    return render_template('ava.html', title='Avatar', form=form)
-
-
-@blueprint.route('/api/login', methods=['GET', 'POST'])
-def login():
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
