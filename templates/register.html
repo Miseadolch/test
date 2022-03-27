@@ -4,6 +4,11 @@
 <h1>Registration</h1>
 <form action="" method="post">
     {{ form.hidden_tag() }}
+    {%if message %} 
+    <p class="alert alert-danger" role="alert">
+       {{message}}
+    </p>
+    {%endif%}
     <p>
         {{ form.email.label }}<br>
         {{ form.email(class="form-control", type="email") }}<br>
@@ -59,15 +64,6 @@
         {% endfor %}
     </p>
     <p>
-        {{ form.year.label }}<br>
-        {{ form.year(class="form-control") }}<br>
-        {% for error in form.year.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
         {{ form.group.label }}<br>
         {{ form.group(class="form-control") }}<br>
         {% for error in form.group.errors %}
@@ -76,11 +72,6 @@
             </p>
         {% endfor %}
     </p>
-    <form enctype="multipart/form-data" method="post">
-        <p>Загрузите ваши фотографии на сервер</p>
-        <p><input type="file" name="photo" accept="image/*"></p>
-        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-        {{message}}
-       </form>
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
 </form>
 {% endblock %}
