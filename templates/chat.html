@@ -1,0 +1,28 @@
+{% extends "hat.html" %}
+
+{% block content %}
+<div>
+     <h2>Чат</h2>
+     <form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div class="bord">
+    {% for item in messages%}
+    {% if current_user.id == item.user_id %}
+    <div id="all_mes" class="alm-right">{{item.text}}<br></div>
+    {% else %}
+    <div id="all_mes" class="alm-left">{{item.text}}<br></div>
+    {% endif %}
+    {% endfor %}
+    </div>
+    <div class="mess">
+        <form id="messForm">
+            <h5>Сообщение</h5>
+            <p>{{form.message(class="form-control") }}</p>
+            <br>
+            <p>{{ form.submit(type="submit", class="btn btn-danger") }}</p>
+        </form>
+    </div>
+    
+</form>
+</div>
+{% endblock %}
