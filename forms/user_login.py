@@ -20,6 +20,3 @@ class RegisterForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     group = StringField('Group in lyceum', validators=[DataRequired()])
     submit = SubmitField('Enter')
-
-class Form(FlaskForm):
-    photo = FileField('photo', validators=[DataRequired()])

@@ -177,3 +177,38 @@ form{
 .avatar-field input{
     display: none;
 }
+
+.mess{
+    height: 100px;
+    margin-top: 20px;
+    margin-left: 250px;
+    width: 700px;
+}
+
+.alm-right{
+    margin-left:100px;
+    text-align: right;
+    height: auto;
+    width: auto;
+}
+
+.alm-left{
+    margin-right:100px;
+    text-align: left;
+    height: auto;
+    width: auto;
+}
+
+.bord{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin-left: 250px;
+    max-height: 550px;
+    max-width: 700px;
+    height: 550px;
+    width: 700px;
+    border-top: 2px solid #000000;
+    border-left: 2px solid #000000;
+    border-right: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+}

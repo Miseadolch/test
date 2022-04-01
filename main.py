@@ -1,15 +1,15 @@
 import os
-
 from PIL import Image
 import io
-
 from flask import Flask, render_template, make_response, request, redirect, abort, jsonify
 from data import db_session, users_api
 from data.users import User
+from data.chats import Chats
+from data.messages import Messages
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-
 from flask_restful import reqparse, abort, Api, Resource
 from forms.user_login import RegisterForm, LoginForm
+from forms.message_form import MessageForm
 from flask import Flask
 
 app = Flask(__name__)
@@ -31,13 +31,28 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
-@app.route("/main_chat/<int:user_id>")
+@app.route("/main_chat/<int:user_id>", methods=['POST', 'GET'])
 def main_chat(user_id):
+    form = MessageForm()
     db_sess = db_session.create_session()
-    user = db_sess.query(User).filter((User.id == user_id)).first()
-    photo = Image.open(io.BytesIO(user.photo))
-    photo.save('static/img/photo_for_ava_for_user{}.png'.format(user.id))
-    return render_template("hat.html", photo=user.id)
+    while True:
+        user = db_sess.query(User).filter(User.id == user_id).first()
+        chat = db_sess.query(Chats).filter(Chats.id == 1).first()
+        photo = Image.open(io.BytesIO(user.photo))
+        photo.save('static/img/photo_for_ava_for_user{}.png'.format(user.id))
+        if form.validate_on_submit():
+            if form.message.data is not None and form.message.data != "":
+                mess = Messages()
+                mess.chat_id = chat.id
+                mess.user_id = user_id
+                mess.text = form.message.data
+                db_sess.add(mess)
+                db_sess.commit()
+            form.message.data = ""
+            db_sess.commit()
+        form.message.data = ""
+        messages = db_sess.query(Messages).filter(Messages.chat_id == chat.id).all()
+        return render_template("chat.html", form=form, photo=user.id, messages=messages)
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -72,7 +87,6 @@ def reg_users():
 
 @app.route('/load_ava/<int:user_id>', methods=['GET', 'POST'])
 def load_ava(user_id):
-    flag = 0
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter((User.id == user_id)).first()
     user_first = db_sess.query(User).filter(User.id == 1).first()
@@ -91,20 +105,25 @@ def load_ava(user_id):
     return render_template('load_ava.html', title='Avatar')
 
 
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter((User.email == form.login.data) | (User.nickname == form.login.data)).first()
-        if user.sing_in == 0:
-            os.remove('static/img/etot_parol_nikto_ne_uznaet{}.png'.format(user.id))
-        if user and user.check_password(form.password.data):
-            user.sing_in = 1
-            db_sess.commit()
-            login_user(user, remember=form.remember_me.data)
-            return redirect("/main_chat/{}".format(user.id))
-        return render_template('login.html', message="Incorrect login or password", form=form)
+        if user:
+            if user.sing_in == 0:
+                user.sing_in = 1
+                os.remove('static/img/etot_parol_nikto_ne_uznaet{}.png'.format(user.id))
+            if user.check_password(form.password.data):
+                user.sing_in = 1
+                db_sess.commit()
+                login_user(user, remember=form.remember_me.data)
+                return redirect("/main_chat/{}".format(user.id))
+            return render_template('login.html', message="Incorrect login or password", form=form)
+        else:
+            return render_template('login.html', message="Такого пользователя не существует", form=form)
     return render_template('login.html', title='Authorization', form=form)
 
 
