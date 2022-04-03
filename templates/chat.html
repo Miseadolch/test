@@ -1,28 +1,51 @@
 {% extends "hat.html" %}
 
 {% block content %}
-<div>
-     <h2>Чат</h2>
-     <form action="" method="post">
-    {{ form.hidden_tag() }}
-    <div class="bord">
-    {% for item in messages%}
-    {% if current_user.id == item.user_id %}
-    <div id="all_mes" class="alm-right">{{item.text}}<br></div>
-    {% else %}
-    <div id="all_mes" class="alm-left">{{item.text}}<br></div>
-    {% endif %}
+<h2 class="t_chat">{{title}}</h2>
+<div class="chat_room">
+    {% for item in user_chats%}
+        {% if chat_id == item.id %}
+            <a class = "chat-now" href="/chat/{{item.id}}/{{current_user.id}}">{{item.title}}</a><br>
+        {% else %}
+            <a class = "chat" href="/chat/{{item.id}}/{{current_user.id}}">{{item.title}}</a><br>
+        {% endif %}
     {% endfor %}
-    </div>
-    <div class="mess">
-        <form id="messForm">
-            <h5>Сообщение</h5>
-            <p>{{form.message(class="form-control") }}</p>
-            <br>
-            <p>{{ form.submit(type="submit", class="btn btn-danger") }}</p>
-        </form>
-    </div>
-    
-</form>
 </div>
-{% endblock %}
+<div class="chat_room">
+    <form class="chat_room_frm" action="" method="post">
+            {{ form.hidden_tag() }}
+            <div class="bord">
+                {% for item in messages%}
+                    {% if current_user.id == item.user_id %}
+                        <div id="all_mes" class="alm-right">{{item.text}}<br></div>
+                    {% else %}
+                        <div id="all_mes" class="alm-left">{{item.text}}<br></div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="mess">
+                <form id="messForm">
+                    <h5>Сообщение</h5>
+                    <p>{{form.message(class="form-control") }}</p>
+                    <br>
+                    <p>{{ form.submit(type="submit", class="btn btn-danger") }}</p>
+                </form>
+            </div>
+        </form>
+        </p>
+    </div>  
+<div class="chat_room">
+    <a class = "new-chat" href="/create_chat/{{chat_id}}/{{current_user.id}}">Создать новый чат +</a><br>
+    <a class = "bton-ch-yes" href="/chat/{{chat_id}}/{{current_user.id}}">Чаты</a><br>
+    <a class = "bton-ak-no" href="/ankets/{{chat_id}}/{{current_user.id}}">Анкеты</a><br>
+    {% if chat_id != 1 %}
+        {% if (author != current_user.id) %}
+            <a class = "exit-chat-solo" href="/yes_no_exit/{{chat_id}}/{{current_user.id}}">Выйти из чата</a><br>
+        {% else %}
+            <a class = "edit-chat" href="/edit_chat/{{chat_id}}/{{current_user.id}}">Редактировать чат</a><br>
+            <a class = "exit-chat" href="/yes_no_exit/{{chat_id}}/{{current_user.id}}">Выйти из чата</a><br>
+            <a class = "del-chat" href="/yes_no_chat/{{chat_id}}/{{current_user.id}}">Удалить чат</a><br>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}  
