@@ -7,6 +7,8 @@ from flask import render_template, request, redirect, abort, jsonify, make_respo
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from data import db_session
 from data.chats import Chats
+from data.ankets import Ankets
+from forms.anket_form import AnketForm
 from forms.chats_form import ChatForm
 from forms.edit_chat_from import EditChatForm
 from data.messages import Messages
@@ -183,11 +185,22 @@ def logout():
     return redirect("/login")
 
 
-@app.route('/ankets/<int:chat_id>/<int:user_id>', methods=['POST', 'GET'])
+@app.route('/ankets/<int:chat_id>/<int:user_id>', methods=['GET'])
 def ankets(chat_id, user_id):
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.id == user_id).first()
-    return render_template('ankets.html', title='Анкеты', photo=user.id, chat_id=chat_id)
+    ankets = db_sess.query(Ankets).all()
+    ankets_first = []
+    ankets_second = []
+    p = 0
+    for i in ankets:
+        if p % 2 == 0:
+            ankets_first.append(i)
+        else:
+            ankets_second.append(i)
+        p += 1
+    return render_template('ankets.html', title='Анкеты', photo=user.id, chat_id=chat_id, ankets_first=ankets_first,
+                           ankets_second=ankets_second)
 
 
 @app.route('/create_chat/<int:chat_id>/<int:user_id>', methods=['GET', 'POST'])
@@ -395,6 +408,34 @@ def yes_exit(chat_id, user_id):
     else:
         abort(404)
     return redirect("/main_chat/{}".format(user.id))
+
+
+@app.route('/create-anket/<int:chat_id>/<int:user_id>', methods=['POST', 'GET'])
+def create_anket(chat_id, user_id):
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.id == user_id).first()
+    form = AnketForm()
+    if form.validate_on_submit():
+        if (len(form.theme.data) == 0) or (len(form.theme.data) > 30) or (form.theme.data[0] == ' '):
+            if form.opis.data[0] == ' ' or form.opis.data[0] == '':
+                return render_template('create_anket.html', title='Создание анкеты', form=form, chat_id=chat_id,
+                                       photo=user.id, message="Минимально количество символов в теме: 1, "
+                                                              "Заполните поле описания анкеты")
+            return render_template('create_anket.html', title='Создание анкеты', form=form, chat_id=chat_id,
+                                   photo=user.id, message="Минимально количество символов в теме: 1, "
+                                                          "Максимальное количество символов в теме: 30")
+        else:
+            db_sess = db_session.create_session()
+            anketa = Ankets(
+                author=user.id,
+                theme=form.theme.data,
+                group=user.group,
+                opis=form.opis.data
+            )
+            db_sess.add(anketa)
+            db_sess.commit()
+            return redirect("/ankets/{}/{}".format(chat_id, user_id))
+    return render_template('create_anket.html', title='Создание анкеты', form=form, chat_id=chat_id, photo=user.id)
 
 
 if __name__ == '__main__':

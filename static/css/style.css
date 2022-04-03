@@ -283,7 +283,7 @@ form{
 .bton-ch-no{
     position: relative;
     text-decoration: none;
-    margin-top: 230px;
+    margin-top: 130px;
     margin-left: 20px;
     width: 200px;
     align-items: center;
@@ -328,7 +328,7 @@ h2{
 }
 
 .bton-ch-no:hover{
-    margin-top: 228px;
+    margin-top: 128px;
     border: black solid 2px;
     background-color: #EDF5E1;
     color: black;
@@ -683,5 +683,71 @@ h2{
     color: black;
     text-decoration: none;
     opacity: 0.9;
+    transition: opacity .1s linear;
+}
+
+.new-anket{
+    position: relative;
+    text-decoration: none;
+    margin-top: 20px;
+    margin-left: 20px;
+    width: 200px;
+    align-items: center;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 13px;
+    padding: 10px;
+    color: black;
+    background-color: white;
+    border: black solid 1px;
+    border-radius: 4px;
+    font-weight: 600;
+    transition: opacity .1s linear;
+}
+
+.new-anket:hover{
+    margin-top: 18px;
+    border: black solid 2px;
+    background-color: #5CDB95;
+    color: black;
+    text-decoration: none;
+    opacity: 1;
+    transition: opacity .1s linear;
+}
+
+.p-cr-ankt{
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: auto;
+    margin-top: 40px;
+}
+
+.ankt{
+    position: relative;
+    text-decoration: none;
+    margin-top: 20px;
+    margin-right: 30px;
+    margin-left: 10px;
+    height: 350px;
+    width: 430px;
+    align-items: center;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 20px;
+    color: black;
+    background-color: white;
+    border: black solid 1px;
+    padding: 14px 40px;
+    border-radius: 4px;
+    font-weight: 600;
+    opacity: 0.7;
+    transition: opacity .1s linear;
+}
+
+.ankt:hover{
+    color: black;
+    background-color: #FBE8A6;
+    text-decoration: none;
+    opacity: 1;
     transition: opacity .1s linear;
 }
