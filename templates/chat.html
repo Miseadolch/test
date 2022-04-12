@@ -14,7 +14,7 @@
 <div class="chat_room">
     <form class="chat_room_frm" action="" method="post">
             {{ form.hidden_tag() }}
-            <div class="bord">
+            <div id="bord" class="bord">
                 {% for item in messages%}
                     {% if current_user.id == item.user_id %}
                         <div id="all_mes" class="alm-right">{{item.text}}<br></div>
@@ -28,7 +28,7 @@
                     <h5>Сообщение</h5>
                     <p>{{form.message(class="form-control") }}</p>
                     <br>
-                    <p>{{ form.submit(type="submit", class="btn btn-danger") }}</p>
+                    <button id="btn">{{form.submit(type="submit", class="btn btn-danger") }}</button>
                 </form>
             </div>
         </form>
