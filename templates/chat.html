@@ -1,6 +1,22 @@
 {% extends "hat.html" %}
 
 {% block content %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        var socket = io.connect('https://teasst123123.herokuapp.com/');
+        socket.on('message', function(msg) {
+            var alm = document.getElementById('cl').innerHTML;
+            $("#messages").append(`<div class="${alm}">`+msg+`</div>`);
+            console.log('Received message');
+        });
+    
+        $('#sendbutton').on('click', function() {
+            socket.send($('#myMessage').val());
+            $('#myMessage').val('');
+        });
+    
+    });
+    </script>
 <h2 class="t_chat">{{title}}</h2>
 <div class="chat_room">
     {% for item in user_chats%}
@@ -14,7 +30,7 @@
 <div class="chat_room">
     <form class="chat_room_frm" action="" method="post">
             {{ form.hidden_tag() }}
-            <div id="bord" class="bord">
+            <div id="messages" class="bord">
                 {% for item in messages%}
                     {% if current_user.id == item.user_id %}
                         <div id="all_mes" class="alm-right">{{item.text}}<br></div>
@@ -26,9 +42,9 @@
             <div class="mess">
                 <form id="messForm">
                     <h5>Сообщение</h5>
-                    <p>{{form.message(class="form-control") }}</p>
+                    <textarea type="text" id="myMessage" class="form-control"></textarea>
                     <br>
-                    <button id="btn">{{form.submit(type="submit", class="btn btn-danger") }}</button>
+                    <p id="sendbutton" class="btn btn-danger">Отправить</p>
                 </form>
             </div>
         </form>
@@ -48,4 +64,11 @@
         {% endif %}
     {% endif %}
 </div>
+{% for item in messages%}
+    {% if current_user.id == item.user_id %}
+        <div id="cl" hidden>alm-right</div>
+    {% else %}
+        <div id="cl" hidden>alm-left</div>
+    {% endif %}
+{% endfor %}
 {% endblock %}  

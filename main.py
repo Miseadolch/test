@@ -1,6 +1,6 @@
 import io
 import os
-
+from flask_socketio import SocketIO, send
 from PIL import Image
 from flask import Flask
 from flask import render_template, request, redirect, abort, jsonify, make_response
@@ -24,9 +24,22 @@ from forms.user_login import RegisterForm, LoginForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+socketio = SocketIO(app, cors_allowed_origins='*')
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+
+@socketio.on('message')
+def handleMessage(msg):
+    db_sess = db_session.create_session()
+    mess = Messages()
+    mess.chat_id = ch_id
+    mess.user_id = us_id
+    mess.text = msg
+    db_sess.add(mess)
+    db_sess.commit()
+    send(msg, broadcast=True)
 
 
 @app.errorhandler(404)
@@ -48,6 +61,7 @@ def load_user(user_id):
 
 @app.route("/main_chat/<int:user_id>", methods=['POST', 'GET'])
 def main_chat(user_id):
+    global ch_id, us_id
     form = MessageForm()
     db_sess = db_session.create_session()
     chat = db_sess.query(Chats).filter(Chats.id == 1).first()
@@ -59,27 +73,19 @@ def main_chat(user_id):
         author = int(author)
     else:
         author = -1
-    if form.validate_on_submit():
-        if form.message.data is not None and form.message.data != "":
-            mess = Messages()
-            mess.chat_id = chat.id
-            mess.user_id = user_id
-            mess.text = form.message.data
-            db_sess.add(mess)
-            db_sess.commit()
-        form.message.data = ""
-        db_sess.commit()
-    form.message.data = ""
+    ch_id = 1
+    us_id = user_id
     messages = db_sess.query(Messages).filter(Messages.chat_id == chat.id).all()
     user_chats = db_sess.query(Chats).filter(
         (Chats.collaborators.like("%{}%".format(current_user.id))) | (
             Chats.collaborators.like("%all%"))).all()
     return render_template("chat.html", form=form, photo=user.id, messages=messages, title=chat.title,
-                            user_chats=user_chats, chat_id=1, author=author)
+                           user_chats=user_chats, chat_id=1, author=author)
 
 
 @app.route("/chat/<int:chat_id>/<int:user_id>", methods=['POST', 'GET'])
 def own_chat(chat_id, user_id):
+    global ch_id, us_id
     form = MessageForm()
     db_sess = db_session.create_session()
     chat = db_sess.query(Chats).filter(Chats.id == chat_id).first()
@@ -89,17 +95,8 @@ def own_chat(chat_id, user_id):
         author = int(author)
     else:
         author = -1
-    if form.validate_on_submit():
-        if form.message.data is not None and form.message.data != "":
-            mess = Messages()
-            mess.chat_id = chat.id
-            mess.user_id = user_id
-            mess.text = form.message.data
-            db_sess.add(mess)
-            db_sess.commit()
-        form.message.data = ""
-        db_sess.commit()
-    form.message.data = ""
+    ch_id = chat_id
+    us_id = user_id
     messages = db_sess.query(Messages).filter(Messages.chat_id == chat.id).all()
     user_chats = db_sess.query(Chats).filter(
         (Chats.collaborators.like("%{}%".format(current_user.id))) | (
