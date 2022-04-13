@@ -59,10 +59,10 @@
         {% endif %}
     {% endif %}
 </div>
-<div id="ch_id">{{chat_id}}</div>
+<div id="ch_id" hidden>{{chat_id}}</div>
 {% if messages %}
-<div id="item_id">{{messages[0].chat_id}}</div>
+<div id="item_id" hidden>{{messages[0].chat_id}}</div>
 {% else %}
-<div id="item_id">0</div>
+<div id="item_id" hidden>0</div>
 {% endif %}
 {% endblock %}  
