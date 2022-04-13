@@ -40,7 +40,10 @@ def handleMessage(msg):
     mess.text = msg
     db_sess.add(mess)
     db_sess.commit()
-    send(msg, broadcast=True)
+    print(ch_id)
+    print(current_user.chat_now)
+    if ch_id == current_user.chat_now:
+        send(msg, broadcast=True)
 
 
 @app.errorhandler(404)
@@ -94,6 +97,9 @@ def own_chat(chat_id, user_id):
     chat = db_sess.query(Chats).filter(Chats.id == chat_id).first()
     user = db_sess.query(User).filter(User.id == user_id).first()
     author = chat.collaborators.split(' ')[0]
+    print(chat.id)
+    user.chat_now = chat.id
+    db_sess.commit()
     if author != "all":
         author = int(author)
     else:
