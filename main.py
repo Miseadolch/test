@@ -734,4 +734,5 @@ def auto_create_chat(first_id, second_id):
 
 if __name__ == '__main__':
     db_session.global_init("db/students_chat.db")
-    app.run(port=8080, host='127.0.0.1')
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
