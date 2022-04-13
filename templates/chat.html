@@ -3,7 +3,7 @@
 {% block content %}
 <script type="text/javascript">
     $(document).ready(function() {
-        var socket = io.connect('http://192.168.1.7:5000/');
+        var socket = io.connect('https://teasst123123.herokuapp.com/');
         socket.on('message', function(msg) {
             var alm = document.getElementById('cl').innerHTML;
             var ch_id = document.getElementById('ch_id').innerHTML;
