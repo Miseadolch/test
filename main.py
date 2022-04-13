@@ -67,8 +67,6 @@ def main_chat(user_id):
     db_sess = db_session.create_session()
     chat = db_sess.query(Chats).filter(Chats.id == 1).first()
     user = db_sess.query(User).filter(User.id == user_id).first()
-    photo = Image.open(io.BytesIO(user.photo))
-    photo.save('static/img/photo_for_ava_for_user{}.png'.format(user.id))
     author = chat.collaborators.split(' ')[0]
     if author != "all":
         author = int(author)
@@ -206,7 +204,9 @@ def login():
                 user.sing_in = 1
                 db_sess.commit()
                 login_user(user, remember=form.remember_me.data)
-                return redirect("/main_chat/{}".format(user.id))
+                photo = Image.open(io.BytesIO(user.photo))
+                photo.save('static/img/photo_for_ava_for_user{}.png'.format(user.id))
+                return redirect("/chat/1/{}".format(user.id))
             return render_template('login.html', message="Неверный логин или пароль", form=form)
         else:
             return render_template('login.html', message="Такого пользователя не существует", form=form)

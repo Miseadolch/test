@@ -3,11 +3,14 @@
 {% block content %}
 <script type="text/javascript">
     $(document).ready(function() {
+        var ch_id = document.getElementById('ch_id').innerHTML;
+        var item_id = document.getElementById('item_id').innerHTML;
+        console.log(ch_id+' '+item_id);
         var socket = io.connect('https://teasst123123.herokuapp.com/');
         socket.on('message', function(msg) {
-            var alm = document.getElementById('cl').innerHTML;
-            var ch_id = document.getElementById('ch_id').innerHTML;
-            $(`#messages${ch_id}`).append(`<div class="${alm}">`+msg+`</div>`);
+            if (ch_id == item_id){
+                $('#messages').append(`<div class="alm-left">`+msg+`</div>`);
+            }
             console.log('Received message');
         });
     
@@ -31,13 +34,9 @@
 <div class="chat_room">
     <form class="chat_room_frm" action="" method="post">
             {{ form.hidden_tag() }}
-            <div id="messages{{chat_id}}" class="bord">
+            <div id="messages" class="bord">
                 {% for item in messages%}
-                    {% if current_user.id == item.user_id %}
-                        <div id="all_mes" class="alm-right">{{item.text}}<br></div>
-                    {% else %}
-                        <div id="all_mes" class="alm-left">{{item.text}}<br></div>
-                    {% endif %}
+                    <div id="all_mes" class="alm-left">{{item.text}}<br></div>
                 {% endfor %}
             </div>
             <div class="mess">
@@ -48,9 +47,8 @@
                     <p id="sendbutton" class="btn btn-danger">Отправить</p>
                 </form>
             </div>
-        </form>
-        </p>
-    </div>  
+    </form>
+</div>  
 <div class="chat_room">
     <a class = "new-chat" href="/create_chat/{{chat_id}}/{{current_user.id}}">Создать новый чат +</a><br>
     <a class = "bton-ch-yes" href="/chat/{{chat_id}}/{{current_user.id}}">Чаты</a><br>
@@ -65,17 +63,10 @@
         {% endif %}
     {% endif %}
 </div>
-{% for item in messages%}
-    {% if item.id == last.id %}
-        {% if current_user.id == item.user_id %}
-            <div id="cl">alm-right</div>
-        {% else %}
-            <div id="cl">alm-left</div>
-        {% endif %}
-    {% endif %}
-{% endfor %}
-{% if last == 0 %}
-        <div id="cl">alm-right</div>
-{% endif %}
 <div id="ch_id">{{chat_id}}</div>
+{% if messages %}
+<div id="item_id">{{messages[0].chat_id}}</div>
+{% else %}
+<div id="item_id">{{chat_id}}</div>
+{% endif %}
 {% endblock %}  
