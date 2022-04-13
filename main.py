@@ -29,8 +29,10 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+namespace = '/chat/1/2'
 
-@socketio.on('message')
+
+@socketio.on('message', namespace=namespace)
 def handleMessage(msg):
     global ch_id, us_id
     db_sess = db_session.create_session()
@@ -40,10 +42,7 @@ def handleMessage(msg):
     mess.text = msg
     db_sess.add(mess)
     db_sess.commit()
-    print(ch_id)
-    print(current_user.chat_now)
-    if ch_id == current_user.chat_now:
-        send(msg, broadcast=True)
+    send(msg, broadcast=True)
 
 
 @app.errorhandler(404)
@@ -65,7 +64,9 @@ def load_user(user_id):
 
 @app.route("/main_chat/<int:user_id>", methods=['POST', 'GET'])
 def main_chat(user_id):
+    global namespace
     global ch_id, us_id
+    namespace = '/chat/1/{}'.format(current_user.id)
     form = MessageForm()
     db_sess = db_session.create_session()
     chat = db_sess.query(Chats).filter(Chats.id == 1).first()
@@ -92,6 +93,8 @@ def main_chat(user_id):
 @app.route("/chat/<int:chat_id>/<int:user_id>", methods=['POST', 'GET'])
 def own_chat(chat_id, user_id):
     global ch_id, us_id
+    global namespace
+    namespace = '/chat/{}/{}'.format(chat_id, current_user.id)
     form = MessageForm()
     db_sess = db_session.create_session()
     chat = db_sess.query(Chats).filter(Chats.id == chat_id).first()
