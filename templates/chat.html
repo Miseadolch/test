@@ -68,14 +68,14 @@
 {% for item in messages%}
     {% if item.id == last.id %}
         {% if current_user.id == item.user_id %}
-            <div id="cl" hidden>alm-right</div>
+            <div id="cl">alm-right</div>
         {% else %}
-            <div id="cl" hidden>alm-left</div>
+            <div id="cl">alm-left</div>
         {% endif %}
     {% endif %}
 {% endfor %}
 {% if last == 0 %}
-        <div id="cl" hidden>alm-right</div>
+        <div id="cl">alm-right</div>
 {% endif %}
-<div id="ch_id" hidden>{{chat_id}}</div>
+<div id="ch_id">{{chat_id}}</div>
 {% endblock %}  
