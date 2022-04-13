@@ -3,10 +3,11 @@
 {% block content %}
 <script type="text/javascript">
     $(document).ready(function() {
-        var socket = io.connect('https://teasst123123.herokuapp.com/');
+        var socket = io.connect('http://192.168.1.7:5000/');
         socket.on('message', function(msg) {
             var alm = document.getElementById('cl').innerHTML;
-            $("#messages").append(`<div class="${alm}">`+msg+`</div>`);
+            var ch_id = document.getElementById('ch_id').innerHTML;
+            $(`#messages${ch_id}`).append(`<div class="${alm}">`+msg+`</div>`);
             console.log('Received message');
         });
     
@@ -30,7 +31,7 @@
 <div class="chat_room">
     <form class="chat_room_frm" action="" method="post">
             {{ form.hidden_tag() }}
-            <div id="messages" class="bord">
+            <div id="messages{{chat_id}}" class="bord">
                 {% for item in messages%}
                     {% if current_user.id == item.user_id %}
                         <div id="all_mes" class="alm-right">{{item.text}}<br></div>
@@ -76,4 +77,5 @@
 {% if last == 0 %}
         <div id="cl" hidden>alm-right</div>
 {% endif %}
+<div id="ch_id" hidden>{{chat_id}}</div>
 {% endblock %}  
