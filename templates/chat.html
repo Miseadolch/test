@@ -5,11 +5,11 @@
     $(document).ready(function() {
         var ch_id = document.getElementById('ch_id').innerHTML;
         var item_id = document.getElementById('item_id').innerHTML;
-        console.log(ch_id+' '+item_id);
+        console.log(`#messages${ch_id}`);
         var socket = io.connect('https://teasst123123.herokuapp.com/');
         socket.on('message', function(msg) {
             if (ch_id == item_id){
-                $('#messages').append(`<div class="alm-left">`+msg+`</div>`);
+                $(`#messages${ch_id}`).append(`<div class="alm-left">`+msg+`</div>`);
             }
             console.log('Received message');
         });
@@ -34,7 +34,7 @@
 <div class="chat_room">
     <form class="chat_room_frm" action="" method="post">
             {{ form.hidden_tag() }}
-            <div id="messages" class="bord">
+            <div id="messages{{chat_id}}" class="bord">
                 {% for item in messages%}
                     <div id="all_mes" class="alm-left">{{item.text}}<br></div>
                 {% endfor %}
