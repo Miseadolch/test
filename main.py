@@ -32,6 +32,7 @@ login_manager.init_app(app)
 
 @socketio.on('message')
 def handleMessage(msg):
+    global ch_id, us_id
     db_sess = db_session.create_session()
     mess = Messages()
     mess.chat_id = ch_id
@@ -79,6 +80,10 @@ def main_chat(user_id):
     user_chats = db_sess.query(Chats).filter(
         (Chats.collaborators.like("%{}%".format(current_user.id))) | (
             Chats.collaborators.like("%all%"))).all()
+    if len(messages) > 0:
+        last = messages[-1]
+    else:
+        last = 0
     return render_template("chat.html", form=form, photo=user.id, messages=messages, title=chat.title,
                            user_chats=user_chats, chat_id=1, author=author)
 
@@ -101,8 +106,12 @@ def own_chat(chat_id, user_id):
     user_chats = db_sess.query(Chats).filter(
         (Chats.collaborators.like("%{}%".format(current_user.id))) | (
             Chats.collaborators.like("%all%"))).all()
+    if len(messages) > 0:
+        last = messages[-1]
+    else:
+        last = 0
     return render_template("chat.html", form=form, photo=user.id, messages=messages, title=chat.title,
-                           user_chats=user_chats, chat_id=chat_id, author=author)
+                           user_chats=user_chats, chat_id=chat_id, author=author, last=last)
 
 
 @app.route('/profile/<int:chat_id>/<int:user_id>')
@@ -725,5 +734,4 @@ def auto_create_chat(first_id, second_id):
 
 if __name__ == '__main__':
     db_session.global_init("db/students_chat.db")
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(port=8080, host='127.0.0.1')
