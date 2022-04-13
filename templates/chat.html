@@ -3,24 +3,32 @@
 {% block content %}
 <script type="text/javascript">
     $(document).ready(function() {
+        var k = 0
         var ch_id = document.getElementById('ch_id').innerHTML;
         var item_id = document.getElementById('item_id').innerHTML;
-        console.log(`#messages${ch_id}`);
+        console.log(`#messages${item_id}`);
         var socket = io.connect('https://teasst123123.herokuapp.com/');
         socket.on('message', function(msg) {
-            if (ch_id == item_id){
-                $(`#messages${ch_id}`).append(`<div class="alm-left">`+msg+`</div>`);
+            if (k == 1){
+                $(`#messages${item_id}`).append(`<div class="alm-left">`+msg+`</div>`);
+                k = 0
             }
             console.log('Received message');
         });
     
         $('#sendbutton').on('click', function() {
+            k = 1
             socket.send($('#myMessage').val());
             $('#myMessage').val('');
         });
     
     });
     </script>
+<script type="text/javascript">
+    var item_id = document.getElementById('item_id').innerHTML;
+    var block = document.getElementById(`#messages${item_id}`);
+    block.scrollTop = block.scrollHeight;
+  </script>
 <h2 class="t_chat">{{title}}</h2>
 <div class="chat_room">
     {% for item in user_chats%}
@@ -67,6 +75,6 @@
 {% if messages %}
 <div id="item_id">{{messages[0].chat_id}}</div>
 {% else %}
-<div id="item_id">{{chat_id}}</div>
+<div id="item_id">0</div>
 {% endif %}
 {% endblock %}  
