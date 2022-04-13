@@ -85,7 +85,7 @@ def main_chat(user_id):
     else:
         last = 0
     return render_template("chat.html", form=form, photo=user.id, messages=messages, title=chat.title,
-                           user_chats=user_chats, chat_id=1, author=author)
+                           user_chats=user_chats, chat_id=1, author=author, last=last)
 
 
 @app.route("/chat/<int:chat_id>/<int:user_id>", methods=['POST', 'GET'])
