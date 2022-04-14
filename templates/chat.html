@@ -6,7 +6,7 @@
         var chat_id = document.getElementById('ch_id').innerHTML;
         var user_id = document.getElementById('us_id').innerHTML;
         var namespace ='chat/';
-        var socket = io.connect('http://192.168.1.7:5000/' + namespace);
+        var socket = io.connect('https://teasst123123.herokuapp.com/' + namespace);
         console.log('http://192.168.1.7:5000/' + namespace);
         socket.on('message', function(msg) {
             $(`#messages${chat_id}`).append(`<div class="alm-left">`+msg+`</div>`);
