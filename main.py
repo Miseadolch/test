@@ -29,10 +29,14 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+ch_id = '1'
+us_id = '2'
 
-@socketio.on('message')
+
+@socketio.on('message', namespace='/chat/')
 def handleMessage(msg):
     global ch_id, us_id
+    print(namespace)
     db_sess = db_session.create_session()
     mess = Messages()
     mess.chat_id = ch_id
@@ -62,7 +66,9 @@ def load_user(user_id):
 
 @app.route("/main_chat/<int:user_id>", methods=['POST', 'GET'])
 def main_chat(user_id):
+    global namespace
     global ch_id, us_id
+    namespace = '/chat/1/{}'.format(current_user.id)
     form = MessageForm()
     db_sess = db_session.create_session()
     chat = db_sess.query(Chats).filter(Chats.id == 1).first()
@@ -89,12 +95,13 @@ def main_chat(user_id):
 @app.route("/chat/<int:chat_id>/<int:user_id>", methods=['POST', 'GET'])
 def own_chat(chat_id, user_id):
     global ch_id, us_id
+    global namespace
+    namespace = '/chat/{}/{}'.format(chat_id, current_user.id)
     form = MessageForm()
     db_sess = db_session.create_session()
     chat = db_sess.query(Chats).filter(Chats.id == chat_id).first()
     user = db_sess.query(User).filter(User.id == user_id).first()
     author = chat.collaborators.split(' ')[0]
-    print(chat.id)
     user.chat_now = chat.id
     db_sess.commit()
     if author != "all":
