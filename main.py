@@ -69,7 +69,7 @@ def main_chat(user_id):
     else:
         last = 0
 
-    @socketio.on('message', namespace='/chat/{}/{}'.format(chat.id, user_id))
+    @socketio.on('message', namespace='/chat/{}'.format(chat.id))
     def handleMessage(msg):
         mess = Messages()
         mess.chat_id = chat.id
@@ -105,7 +105,7 @@ def own_chat(chat_id, user_id):
     else:
         last = 0
 
-    @socketio.on('message', namespace='/chat/{}/{}'.format(chat.id, user_id))
+    @socketio.on('message', namespace='/chat/{}'.format(chat.id))
     def handleMessage(msg):
         mess = Messages()
         mess.chat_id = chat.id
