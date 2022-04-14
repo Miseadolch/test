@@ -29,23 +29,6 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-ch_id = '1'
-us_id = '2'
-
-
-@socketio.on('message', namespace='/chat/')
-def handleMessage(msg):
-    global ch_id, us_id
-    print(namespace)
-    db_sess = db_session.create_session()
-    mess = Messages()
-    mess.chat_id = ch_id
-    mess.user_id = us_id
-    mess.text = msg
-    db_sess.add(mess)
-    db_sess.commit()
-    send(msg, broadcast=True)
-
 
 @app.errorhandler(404)
 def not_found(error):
@@ -66,9 +49,6 @@ def load_user(user_id):
 
 @app.route("/main_chat/<int:user_id>", methods=['POST', 'GET'])
 def main_chat(user_id):
-    global namespace
-    global ch_id, us_id
-    namespace = '/chat/1/{}'.format(current_user.id)
     form = MessageForm()
     db_sess = db_session.create_session()
     chat = db_sess.query(Chats).filter(Chats.id == 1).first()
@@ -88,15 +68,23 @@ def main_chat(user_id):
         last = messages[-1]
     else:
         last = 0
+
+    @socketio.on('message', namespace='/chat/{}/{}'.format(chat.id, user_id))
+    def handleMessage(msg):
+        mess = Messages()
+        mess.chat_id = chat.id
+        mess.user_id = user_id
+        mess.text = msg
+        db_sess.add(mess)
+        db_sess.commit()
+        send(msg, broadcast=True)
+
     return render_template("chat.html", form=form, photo=user.id, messages=messages, title=chat.title,
                            user_chats=user_chats, chat_id=1, author=author, last=last)
 
 
 @app.route("/chat/<int:chat_id>/<int:user_id>", methods=['POST', 'GET'])
 def own_chat(chat_id, user_id):
-    global ch_id, us_id
-    global namespace
-    namespace = '/chat/{}/{}'.format(chat_id, current_user.id)
     form = MessageForm()
     db_sess = db_session.create_session()
     chat = db_sess.query(Chats).filter(Chats.id == chat_id).first()
@@ -108,8 +96,6 @@ def own_chat(chat_id, user_id):
         author = int(author)
     else:
         author = -1
-    ch_id = chat_id
-    us_id = user_id
     messages = db_sess.query(Messages).filter(Messages.chat_id == chat.id).all()
     user_chats = db_sess.query(Chats).filter(
         (Chats.collaborators.like("%{}%".format(current_user.id))) | (
@@ -118,6 +104,17 @@ def own_chat(chat_id, user_id):
         last = messages[-1]
     else:
         last = 0
+
+    @socketio.on('message', namespace='/chat/{}/{}'.format(chat.id, user_id))
+    def handleMessage(msg):
+        mess = Messages()
+        mess.chat_id = chat.id
+        mess.user_id = user_id
+        mess.text = msg
+        db_sess.add(mess)
+        db_sess.commit()
+        send(msg, broadcast=True)
+
     return render_template("chat.html", form=form, photo=user.id, messages=messages, title=chat.title,
                            user_chats=user_chats, chat_id=chat_id, author=author, last=last)
 
