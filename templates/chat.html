@@ -5,9 +5,9 @@
     $(document).ready(function() {
         var chat_id = document.getElementById('ch_id').innerHTML;
         var user_id = document.getElementById('us_id').innerHTML;
+        var elem = document.getElementById(`#messages${chat_id}`);
         var namespace ='chat/' + chat_id;
-        var socket = io.connect('https://teasst123123.herokuapp.com/' + namespace);
-        console.log('http://192.168.1.7:5000/' + namespace);
+        var socket = io.connect('http://192.168.1.7:5000/' + namespace);
         socket.on('message', function(msg) {
             $(`#messages${chat_id}`).append(`<div class="alm-left">`+msg+`</div>`);
             console.log('Received message');
@@ -16,7 +16,6 @@
             socket.send($('#myMessage').val());
             $('#myMessage').val('');
         });
-    
     });
 </script>
 <h2 class="t_chat">{{title}}</h2>
@@ -34,7 +33,11 @@
             {{ form.hidden_tag() }}
             <div id="messages{{chat_id}}" class="bord">
                 {% for item in messages%}
-                    <div id="all_mes" class="alm-left">{{item.text}}<br></div>
+                    {% if current_user.id == item.user_id %}
+                        <div id="all_mes" class="alm-right">{{item.text}}<br></div>
+                    {% else %}
+                        <div id="all_mes" class="alm-left">{{item.text}}<br></div>
+                    {% endif %}
                 {% endfor %}
             </div>
             <div class="mess">
@@ -63,9 +66,4 @@
 </div>
 <div id="ch_id" hidden>{{chat_id}}</div>
 <div id="us_id" hidden>{{current_user.id}}</div>
-{% if messages %}
-<div id="item_id" hidden>{{messages[0].chat_id}}</div>
-{% else %}
-<div id="item_id" hidden>0</div>
-{% endif %}
 {% endblock %}  
