@@ -8,6 +8,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from data import db_session
 from data.chats import Chats
 from data.ankets import Ankets
+from data import users_api
 from forms.del_akount_form import DelAkountForm
 from forms.edit_anket_form import EditAnketForm
 from forms.begin_change_password_form import BeginChangePasswordForm
@@ -748,5 +749,6 @@ def questoins(chat_id, user_id):
 
 if __name__ == '__main__':
     db_session.global_init("db/students_chat.db")
+    app.register_blueprint(users_api.blueprint)
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
