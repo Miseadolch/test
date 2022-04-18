@@ -5,21 +5,23 @@
     $(document).ready(function() {
         var chat_id = document.getElementById('ch_id').innerHTML;
         var user_id = document.getElementById('us_id').innerHTML;
+        var send_time = document.getElementById('send_time').innerHTML;
+        $(`#messages${chat_id}`).scrollTop($(`#messages${chat_id}`)[0].scrollHeight);
         var k = []
         var elem = document.getElementById(`#messages${chat_id}`);
         var namespace ='chat/' + chat_id;
-        var socket = io.connect('https://teasst123123.herokuapp.com/' + namespace);
+        var socket = io.connect('https://miseadolch.pythonanywhere.com/' + namespace);
         socket.on('message', function(msg) {
             if (k[1] == user_id){
-                $(`#messages${chat_id}`).append(`<div class="alm-right">`+msg+`</div>`);
+                $(`#messages${chat_id}`).append(`<div class="alm-right">`+ msg + `<div class="soob-time">` + send_time + `</div>` +`</div>`);
             }
             else{
-                $(`#messages${chat_id}`).append(`<div class="alm-left">`+msg+`</div>`);
+                $(`#messages${chat_id}`).append(`<div class="alm-left">` + msg + `<div class="soob-time-left">` + send_time + `</div>` +`</div>`);
             }
             console.log('Received message');
         });
         $('#sendbutton').on('click', function() {
-            k = [$('#myMessage').val(), user_id]
+            k = [$('#myMessage').val(), user_id, send_time]
             socket.send($('#myMessage').val());
             $('#myMessage').val('');
         });
@@ -41,9 +43,9 @@
             <div id="messages{{chat_id}}" class="bord">
                 {% for item in messages%}
                     {% if current_user.id == item.user_id %}
-                        <div id="all_mes" class="alm-right">{{item.text}}<br></div>
+                        <div id="all_mes" class="alm-right">{{item.text}} <div class="soob-time">{{item.send_time}}</div></div>
                     {% else %}
-                        <div id="all_mes" class="alm-left">{{item.text}}<br></div>
+                        <div id="all_mes" class="alm-left">{{item.text}} <div class="soob-time-left">{{item.send_time}}</div></div>
                     {% endif %}
                 {% endfor %}
             </div>
@@ -73,4 +75,5 @@
 </div>
 <div id="ch_id" hidden>{{chat_id}}</div>
 <div id="us_id" hidden>{{current_user.id}}</div>
+<div id="send_time" hidden>{{send_t}}</div>
 {% endblock %}  

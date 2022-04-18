@@ -1,4 +1,5 @@
 import io
+import datetime
 import os
 from flask_socketio import SocketIO, send
 from PIL import Image
@@ -23,6 +24,7 @@ from data.users import User
 from forms.message_form import MessageForm
 from forms.user_login import RegisterForm, LoginForm
 
+db_session.global_init("db/students_chat.db")
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 socketio = SocketIO(app, cors_allowed_origins='*')
@@ -59,8 +61,6 @@ def main_chat(user_id):
         author = int(author)
     else:
         author = -1
-    ch_id = 1
-    us_id = user_id
     messages = db_sess.query(Messages).filter(Messages.chat_id == chat.id).all()
     user_chats = db_sess.query(Chats).filter(
         (Chats.collaborators.like("%{}%".format(current_user.id))) | (
@@ -70,18 +70,36 @@ def main_chat(user_id):
     else:
         last = 0
 
+    if len(str(datetime.datetime.now().minute)) == 1:
+        minut = '0' + str(datetime.datetime.now().minute)
+    else:
+        minut = str(datetime.datetime.now().minute)
+    if len(str(datetime.datetime.now().hour)) == 1:
+        hour = '0' + str(datetime.datetime.now().hour)
+    else:
+        hour = str(datetime.datetime.now().hour)
+
     @socketio.on('message', namespace='/chat/{}'.format(chat.id))
     def handleMessage(msg):
         mess = Messages()
         mess.chat_id = chat.id
         mess.user_id = user_id
         mess.text = msg
+        if len(str(datetime.datetime.now().minute)) == 1:
+            minut = '0' + str(datetime.datetime.now().minute)
+        else:
+            minut = str(datetime.datetime.now().minute)
+        if len(str(datetime.datetime.now().hour)) == 1:
+            hour = '0' + str(datetime.datetime.now().hour)
+        else:
+            hour = str(datetime.datetime.now().hour)
+        mess.send_time = hour + ':' + minut
         db_sess.add(mess)
         db_sess.commit()
         send(msg, broadcast=True)
 
     return render_template("chat.html", form=form, photo=user.id, messages=messages, title=chat.title,
-                           user_chats=user_chats, chat_id=1, author=author, last=last)
+                           user_chats=user_chats, chat_id=1, author=author, last=last, send_t=hour + ':' + minut)
 
 
 @app.route("/chat/<int:chat_id>/<int:user_id>", methods=['POST', 'GET'])
@@ -106,18 +124,37 @@ def own_chat(chat_id, user_id):
     else:
         last = 0
 
+    if len(str(datetime.datetime.now().minute)) == 1:
+        minut = '0' + str(datetime.datetime.now().minute)
+    else:
+        minut = str(datetime.datetime.now().minute)
+    if len(str(datetime.datetime.now().hour)) == 1:
+        hour = '0' + str(datetime.datetime.now().hour)
+    else:
+        hour = str(datetime.datetime.now().hour)
+
     @socketio.on('message', namespace='/chat/{}'.format(chat.id))
     def handleMessage(msg):
         mess = Messages()
         mess.chat_id = chat.id
         mess.user_id = user_id
         mess.text = msg
+        if len(str(datetime.datetime.now().minute)) == 1:
+            minut = '0' + str(datetime.datetime.now().minute)
+        else:
+            minut = str(datetime.datetime.now().minute)
+        if len(str(datetime.datetime.now().hour)) == 1:
+            hour = '0' + str(datetime.datetime.now().hour)
+        else:
+            hour = str(datetime.datetime.now().hour)
+        mess.send_time = hour + ':' + minut
         db_sess.add(mess)
         db_sess.commit()
         send(msg, broadcast=True)
 
     return render_template("chat.html", form=form, photo=user.id, messages=messages, title=chat.title,
-                           user_chats=user_chats, chat_id=chat_id, author=author, last=last)
+                           user_chats=user_chats, chat_id=chat_id, author=author, last=last,
+                           send_t=hour + ':' + minut)
 
 
 @app.route('/profile/<int:chat_id>/<int:user_id>')
