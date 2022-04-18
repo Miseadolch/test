@@ -10,7 +10,7 @@
         var k = []
         var elem = document.getElementById(`#messages${chat_id}`);
         var namespace ='chat/' + chat_id;
-        var socket = io.connect('https://miseadolch.pythonanywhere.com/' + namespace);
+        var socket = io.connect('https://teasst123123.herokuapp.com/' + namespace);
         socket.on('message', function(msg) {
             if (k[1] == user_id){
                 $(`#messages${chat_id}`).append(`<div class="alm-right">`+ msg + `<div class="soob-time">` + send_time + `</div>` +`</div>`);
