@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f24047c7-6064-4530-9450-9bd557d6b07d" name="Changes" comment="add_profile">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/chats.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/chats.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/messages.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/messages.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/students_chat.db" beforeDir="false" afterPath="$PROJECT_DIR$/db/students_chat.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/forms/del_akount_form.py" beforeDir="false" afterPath="$PROJECT_DIR$/forms/del_akount_form.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/chat.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/chat.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/chat.html" afterDir="false" />
-    </list>
+    <list default="true" id="f24047c7-6064-4530-9450-9bd557d6b07d" name="Changes" comment="add_profile" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
