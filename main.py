@@ -170,12 +170,31 @@ def reg_users():
     form = RegisterForm()
     user_first = db_sess.query(User).filter(User.id == 1).first()
     prov = 'abcdefghijklmnopqrstuvwxyz0123456789_-+=*^/()&?.:%;$№#"@!,~'
+    prov_pass_letters = 'abcdefghijklmnopqrstuvwxyz'
+    prov_pass_up_letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    prov_pass_chis = '0123456789'
     if form.validate_on_submit():
         if form.password.data != form.password_again.data:
             return render_template('register.html', title='Регистрация',
                                    form=form,
                                    message="Пароли не совпадают")
         db_sess = db_session.create_session()
+        shet_letters = 0
+        shet_up_letters = 0
+        shet_pass_chis = 0
+        for i in form.password.data:
+            if i in prov_pass_letters:
+                shet_letters += 1
+            if i in prov_pass_up_letters:
+                shet_up_letters += 1
+            if i in prov_pass_chis:
+                shet_pass_chis += 1
+        if (shet_letters == 0) or (shet_up_letters == 0) or (shet_pass_chis == 0) or len(form.password.data) < 8:
+            return render_template('register.html', title='Регистрация',
+                                   form=form,
+                                   message="Пароли не надежный. Пароль должен содержать минимум 8 символов, состоять "
+                                           "только из латинских букв, иметь как минимум одну заглавную букву, "
+                                           "одну прописную букву и одну цифру")
         if db_sess.query(User).filter((User.email == form.email.data) | (User.nickname == form.nickname.data)).first():
             return render_template('register.html', title='Регистрация',
                                    form=form,
@@ -627,10 +646,29 @@ def change_password(chat_id, user_id):
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.id == user_id).first()
     form = ChangePasswordForm()
+    prov_pass_letters = 'abcdefghijklmnopqrstuvwxyz'
+    prov_pass_up_letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    prov_pass_chis = '0123456789'
     if form.validate_on_submit():
         if form.password.data != form.password_again.data:
             return render_template("change_password.html", photo=user.id, chat_id=chat_id, title="Смена пароля",
                                    form=form, message="Пароли не совпадают")
+        shet_letters = 0
+        shet_up_letters = 0
+        shet_pass_chis = 0
+        for i in form.password.data:
+            if i in prov_pass_letters:
+                shet_letters += 1
+            if i in prov_pass_up_letters:
+                shet_up_letters += 1
+            if i in prov_pass_chis:
+                shet_pass_chis += 1
+        if (shet_letters == 0) or (shet_up_letters == 0) or (shet_pass_chis == 0) or len(form.password.data) < 8:
+            return render_template("change_password.html", title="Смена пароля",
+                                   form=form, photo=user.id, chat_id=chat_id,
+                                   message="Пароли не надежный. Пароль должен содержать минимум 8 символов, состоять "
+                                           "только из латинских букв, иметь как минимум одну заглавную букву, "
+                                           "одну прописную букву и одну цифру")
         user.set_password(form.password.data)
         db_sess.commit()
         return redirect('/logout')
@@ -781,7 +819,29 @@ def auto_create_chat(first_id, second_id):
 def questoins(chat_id, user_id):
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.id == user_id).first()
-    return render_template("questions.html", photo=user.id, chat_id=chat_id, title="questions")
+    return render_template("questions.html", photo=user.id, chat_id=chat_id, title="Задать вопрос")
+
+
+@app.route('/chat_profile/<int:chat_id>/<int:user_id>')
+def chat_profile(chat_id, user_id):
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.id == user_id).first()
+    chat = db_sess.query(Chats).filter(Chats.id == chat_id).first()
+    if chat.collaborators.split(' ')[0] != 'all':
+        admin = db_sess.query(User).filter(User.id == int(chat.collaborators.split(' ')[0])).first()
+    else:
+        admin = ""
+    sp = []
+    if chat.collaborators.split(' ')[0] != 'all':
+        for i in chat.collaborators.split(' '):
+            if int(i) != 1:
+                sp.append(db_sess.query(User).filter(User.id == int(i)).first())
+    else:
+        sp = db_sess.query(User).all()[1:]
+    for i in sp:
+        print(i.nickname)
+    return render_template("chat_profile.html", photo=user.id, chat_id=chat_id, title=chat.title, admin=admin,
+                           members=sp)
 
 
 if __name__ == '__main__':

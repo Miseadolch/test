@@ -1,14 +1,11 @@
 import flask
-from flask import Flask, render_template, make_response, request, redirect, abort, jsonify
 from flask import jsonify, request
-import os
-import sys
-import requests
 from . import db_session
 from .users import User
+from .chats import Chats
 
 blueprint = flask.Blueprint(
-    'user_api',
+    'users_api',
     __name__,
     template_folder='templates'
 )

@@ -1628,6 +1628,7 @@ h2{
 }
 
 .soob-time{
+    display: block;
     word-wrap: normal;
     font-size: 9.5px;
     margin-top: auto;
@@ -1639,4 +1640,107 @@ h2{
     font-size: 9.5px;
     margin-top: auto;
     padding-left: 10px;
+}
+
+.ssl-ch{
+    color: #000000;
+    text-decoration: none;
+    opacity: 1;
+    transition: opacity .1s linear;   
+}
+
+.ssl-ch:hover{
+    color: #000000;
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity .1s linear;   
+}
+
+.chat_prof_box{
+    float:left;
+    align-items: center;
+    width: 450px;
+    margin-top: 50px;
+}
+
+.chat_prof_bord{
+    display: inline-block;
+    text-align: center;
+    position: relative;
+    margin-top: 20px;
+    text-decoration: none;
+    word-wrap: break-word;
+    overflow: auto;
+    max-height: 700px;
+    max-width: 400px;
+    height: 700px;
+    width: 400px;
+    margin-left: 10px;
+    border-top: 2px solid #000000;
+    border-left: 2px solid #000000;
+    border-right: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+}
+
+.chat_prof_bord::-webkit-scrollbar{
+    display: none;
+}
+
+.chat_prof_nadp{
+    font-size: 20px;
+    font-weight: 700;
+    margin-right: 20px;
+    color: #4d4d4d;
+    text-decoration: none;
+    opacity: 1;
+    transition: opacity .1s linear;   
+}
+
+.chat_prof_nadp_adm{
+    margin-left: 20px;
+    font-size: 20px;
+    font-weight: 700;
+    margin-right: 20px;
+    color: #4d4d4d;
+    text-decoration: none;
+    opacity: 1;
+    transition: opacity .1s linear;   
+}
+
+.chat_prof_adm{
+    margin-top: 20px;
+    margin-left: 20px;
+    font-size: 24px;
+    font-weight: 700;
+    margin-right: 20px;
+    color: #000000;
+    text-decoration: none;
+    opacity: 1;
+    transition: opacity .1s linear;   
+}
+
+.chat_prof_ava{
+    margin-left: 8px;
+    position: relative;
+    border-radius: 50px;
+    border: 1px solid black;
+    color: #000000;
+}
+
+.chat_prof_t{
+    font-weight: 600;
+    color: #000000;
+    font-size: 26px;
+}
+
+.chat_prof_mem{
+    margin-top: 15px;
+    margin-left: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    margin-right: 20px;
+    color: #000000;
+    text-decoration: none;
+    opacity: 1;
+    transition: opacity .1s linear;   
 }
