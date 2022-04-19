@@ -216,8 +216,8 @@ form{
     display: flex;
     word-wrap: break-word;
     min-height: 39px;
-    margin-right: 7px;
-    max-width: 330px;
+    margin-right: 4px;
+    max-width: 300px;
     width: max-content;
     font-size: 16px;
     padding: 6px 12px;
@@ -234,8 +234,8 @@ form{
     display: flex;
     word-wrap: break-word;
     min-height: 39px;
-    margin-left: 7px;
-    max-width: 330px;
+    margin-left: 4px;
+    max-width: 300px;
     width: max-content;
     font-size: 16px;
     padding: 6px 12px;
@@ -398,6 +398,7 @@ h2{
 }
 
 .chat-now{
+    word-wrap: break-word;
     position: relative;
     text-decoration: none;
     margin-top: 20px;
@@ -416,6 +417,7 @@ h2{
 }
 
 .chat{
+    word-wrap: break-word;
     position: relative;
     text-decoration: none;
     margin-top: 20px;
@@ -771,6 +773,7 @@ h2{
 }
 
 .ankt{
+    word-wrap: break-word;
     position: relative;
     text-decoration: none;
     margin-top: 20px;
@@ -812,7 +815,6 @@ h2{
     margin-bottom: 12px;
     position: relative;
     border-radius: 50px;
-    border: 2px solid black;
     color: #000000;
 }
 
@@ -1538,11 +1540,11 @@ h2{
     margin-bottom: 12px;
     position: relative;
     border-radius: 50px;
-    border: 2px solid black;
     color: #000000;
 }
 
 .opis_ankt{
+    word-wrap: break-word;
     border: 1px solid black;
     width: 1140px;
     height: 300px;
@@ -1689,7 +1691,6 @@ h2{
 .chat_prof_nadp{
     font-size: 20px;
     font-weight: 700;
-    margin-right: 20px;
     color: #4d4d4d;
     text-decoration: none;
     opacity: 1;
@@ -1723,7 +1724,6 @@ h2{
     margin-left: 8px;
     position: relative;
     border-radius: 50px;
-    border: 1px solid black;
     color: #000000;
 }
 
@@ -1743,4 +1743,30 @@ h2{
     text-decoration: none;
     opacity: 1;
     transition: opacity .1s linear;   
+}
+
+.right{
+    display:flex;
+}
+
+.left{
+    display:flex;
+}
+
+.chat_ava{
+    margin-top: auto;
+    margin-bottom: 8px;
+    margin-right: 2px;
+    position: relative;
+    border-radius: 50px;
+    color: #000000;
+}
+
+.chat_ava_left{
+    margin-top: auto;
+    margin-bottom: 8px;
+    margin-left: 2px;
+    position: relative;
+    border-radius: 50px;
+    color: #000000;
 }

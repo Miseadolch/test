@@ -5,24 +5,40 @@
     $(document).ready(function() {
         var chat_id = document.getElementById('ch_id').innerHTML;
         var user_id = document.getElementById('us_id').innerHTML;
-        var send_time = document.getElementById('send_time').innerHTML;
         $(`#messages${chat_id}`).scrollTop($(`#messages${chat_id}`)[0].scrollHeight);
         var k = []
+        var send_time = ''
+        var hours = ''
+        var minuets = ''
         var elem = document.getElementById(`#messages${chat_id}`);
         var namespace ='chat/' + chat_id;
         var socket = io.connect('http://192.168.1.7:5000/' + namespace);
         socket.on('message', function(msg) {
             if (k[1] == user_id){
-                $(`#messages${chat_id}`).append(`<div class="alm-right">`+ msg + `<div class="soob-time">` + send_time + `</div>` +`</div>`);
+                $(`#messages${chat_id}`).append(`<div id="all_mes" class="right"> <a class="alm-right">`+ msg + `<div class="soob-time">` + send_time + `</div></a><img class = "chat_ava" width="36px" height="36px" src=/static/img/photo_for_ava_for_user${user_id}.png alt=""/></div>`);
             }
             else{
-                $(`#messages${chat_id}`).append(`<div class="alm-left">` + msg + `<div class="soob-time-left">` + send_time + `</div>` +`</div>`);
+                $(`#messages${chat_id}`).append(`<div id="all_mes" class="left"> <a class="alm-left">`+ msg + `<div class="soob-time">` + send_time + `</div></a><img class = "chat_ava_left" width="36px" height="36px" src=/static/img/photo_for_ava_for_user${user_id}.png alt=""/></div>`);
             }
             $(`#messages${chat_id}`).scrollTop($(`#messages${chat_id}`)[0].scrollHeight);
             console.log('Received message');
         });
         $('#sendbutton').on('click', function() {
             k = [$('#myMessage').val(), user_id, send_time]
+            date = new Date();
+            if (String(date.getHours()).length == 1){
+                hours = '0'+date.getHours();
+            }
+            else{
+                hours = date.getHours();
+            }
+            if (String(date.getMinutes()).length == 1){
+                minuets = '0'+date.getMinutes();
+            }
+            else{
+                minuets = date.getMinutes();
+            }
+            send_time = hours + ':' + minuets;
             socket.send($('#myMessage').val());
             $('#myMessage').val('');
         });
@@ -44,9 +60,15 @@
             <div id="messages{{chat_id}}" class="bord">
                 {% for item in messages%}
                     {% if current_user.id == item.user_id %}
-                        <div id="all_mes" class="alm-right">{{item.text}} <div class="soob-time">{{item.send_time}}</div></div>
+                        <div id="all_mes" class="right">
+                            <a class="alm-right">{{item.text}} <div class="soob-time">{{item.send_time}}</div></a>
+                            <img class = "chat_ava" width="36px" height="36px" src=/static/img/photo_for_ava_for_user{{item.user_id}}.png alt=""/>
+                        </div>
                     {% else %}
-                        <div id="all_mes" class="alm-left">{{item.text}} <div class="soob-time-left">{{item.send_time}}</div></div>
+                        <div id="all_mes" class="left">
+                            <img class = "chat_ava_left" width="36px" height="36px" src=/static/img/photo_for_ava_for_user{{item.user_id}}.png alt=""/>
+                            <a class="alm-left">{{item.text}} <div class="soob-time">{{item.send_time}}</div></a>
+                        </div>
                     {% endif %}
                 {% endfor %}
             </div>
@@ -76,5 +98,4 @@
 </div>
 <div id="ch_id" hidden>{{chat_id}}</div>
 <div id="us_id" hidden>{{current_user.id}}</div>
-<div id="send_time" hidden>{{send_t}}</div>
 {% endblock %}  
