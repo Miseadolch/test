@@ -213,6 +213,7 @@ form{
 }
 
 .alm-right{
+    text-decoration: none;
     display: flex;
     word-wrap: break-word;
     min-height: 39px;
@@ -227,10 +228,18 @@ form{
     margin-left: auto;
     background-color: #5CDB95;
     border: #5CDB95;
+    color: #000000;
     text-align: left;
 }
 
+.alm-right:hover{
+    cursor: pointer;
+    text-decoration: none;
+    color: #000000;
+}
+
 .alm-left{
+    text-decoration: none;
     display: flex;
     word-wrap: break-word;
     min-height: 39px;
@@ -245,16 +254,22 @@ form{
     margin-right: auto;
     background-color: #EFE2BA;
     border: #EFE2BA;
+    color: #000000;
     text-align: left;
+}
+
+.alm-left:hover{
+    text-decoration: none;
+    color: #000000;
 }
 
 .bord{
     text-decoration: none;
     word-wrap: break-word;
     overflow: auto;
-    max-height: 550px;
+    max-height: 650px;
     max-width: 700px;
-    height: 550px;
+    height: 650px;
     width: 700px;
     margin-left: 10px;
     border-top: 2px solid #000000;
@@ -487,7 +502,7 @@ h2{
 .edit-chat{
     position: relative;
     text-decoration: none;
-    margin-top: 80px;
+    margin-top: 180px;
     margin-left: 40px;
     width: 200px;
     align-items: center;
@@ -504,7 +519,7 @@ h2{
 }
 
 .edit-chat:hover{
-    margin-top: 78px;
+    margin-top: 178px;
     border: black solid 2px;
     background-color: #AFD275;
     color: black;
@@ -685,7 +700,7 @@ h2{
 .exit-chat-solo{
     position: relative;
     text-decoration: none;
-    margin-top: 194px;
+    margin-top: 294px;
     margin-left: 40px;
     width: 200px;
     align-items: center;
@@ -1746,10 +1761,12 @@ h2{
 }
 
 .right{
+    text-decoration: none;
     display:flex;
 }
 
 .left{
+    text-decoration: none;
     display:flex;
 }
 

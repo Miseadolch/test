@@ -15,7 +15,7 @@
         var socket = io.connect('http://192.168.1.7:5000/' + namespace);
         socket.on('message', function(msg) {
             if (k[1] == user_id){
-                $(`#messages${chat_id}`).append(`<div id="all_mes" class="right"> <a class="alm-right">`+ msg + `<div class="soob-time">` + send_time + `</div></a><img class = "chat_ava" width="36px" height="36px" src=/static/img/photo_for_ava_for_user${user_id}.png alt=""/></div>`);
+                $(`#messages${chat_id}`).append(`<div id="all_mes" class="right"> <a class="alm-right" href="/change_message/${chat_id}/${user_id}">`+ msg + `<div class="soob-time">` + send_time + `</div></a><img class = "chat_ava" width="36px" height="36px" src=/static/img/photo_for_ava_for_user${user_id}.png alt=""/></div>`);
             }
             else{
                 $(`#messages${chat_id}`).append(`<div id="all_mes" class="left"> <a class="alm-left">`+ msg + `<div class="soob-time">` + send_time + `</div></a><img class = "chat_ava_left" width="36px" height="36px" src=/static/img/photo_for_ava_for_user${user_id}.png alt=""/></div>`);
@@ -61,7 +61,7 @@
                 {% for item in messages%}
                     {% if current_user.id == item.user_id %}
                         <div id="all_mes" class="right">
-                            <a class="alm-right">{{item.text}} <div class="soob-time">{{item.send_time}}</div></a>
+                            <a class="alm-right" href="/change_message/{{item.chat_id}}/{{current_user.id}}">{{item.text}} <div class="soob-time">{{item.send_time}}</div></a>
                             <img class = "chat_ava" width="36px" height="36px" src=/static/img/photo_for_ava_for_user{{item.user_id}}.png alt=""/>
                         </div>
                     {% else %}
